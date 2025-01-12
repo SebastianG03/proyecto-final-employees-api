@@ -30,12 +30,24 @@ Los requisitos para la implementación son los siguientes:
 
 
 ```
-    pip install pipreqs
-    pipreqs /path/to/project
     ./Scripts/activate
+    pip install -r /path/to/requirements.txt
 ```
 3. Para ejecutar al API se utiliza el siguiente comando (asegúrese de que el terminal se encuentre en la posicion correcta)
-```
+```pip install -r /path/to/requirements.txt
+
     fastapi dev src/main.py
 ```
-4. Se puede acceder a la página por este link: http://127.0.0.1:8000/docs 
+## Links
+- Se puede acceder a la página por este link: http://127.0.0.1:8000/docs 
+- Puede acceder a la página deployada por medio de este link: https://circular-dona-dasedev-cffcdb53.koyeb.app/docs
+
+## Documentación adicional
+- [FastAPI | API Example with SQL Model](https://fastapi.tiangolo.com/tutorial/sql-databases/#create-models)
+- [SQL Model Relationships](https://sqlmodel.tiangolo.com/tutorial/fastapi/relationships/)
+- [FastAPI Life Cycle Events](https://fastapi.tiangolo.com/advanced/events/)
+- [How deploy an API using Fast Api on Koyeb](https://www.koyeb.com/docs/deploy/fastapi)
+
+## Métodos de contacto:
+- Email: guamandavid11235@gmail.com
+- Número de contacto: +593 093 982 7471

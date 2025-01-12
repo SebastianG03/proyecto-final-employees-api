@@ -1,2 +1,0 @@
-class SkillsFactory:
-    pass
