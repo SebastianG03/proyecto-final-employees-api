@@ -7,10 +7,10 @@ from domain.entities.skills.department.department_skills import DepartmentSkillT
 from domain.entities.skills.employee.employee_skills import EmployeeSkillTable
 
 class CollectionModel(BaseModel):
-    model_skill_reference: EmployeeSkillTable | DepartmentSkillTable
+    model_skill_reference: SQLModel
     skill_reference: SkillTable
 
-class CollectionSkillsModel(BaseModel):
+class RaitingSkillsModel(BaseModel):
     soft_weight: float = 0
     hard_weight: float = 0
     total_weight: float = 0
@@ -19,5 +19,5 @@ class CollectionSkillsModel(BaseModel):
 class CollectorBase(BaseModel):
     model_reference: SQLModel
     model_skills: List[CollectionModel]
-    skills_raiting: CollectionSkillsModel
+    skills_raiting: RaitingSkillsModel = RaitingSkillsModel()
     

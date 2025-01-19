@@ -1,9 +1,9 @@
 from sqlmodel import Field
 
-from domain.entities.skills.skill.skills import SkillTypeBase
+from domain.entities.skills.skill.skills import SkillCategoryBase
 
 
-class DepartmentSkillBase(SkillTypeBase):
+class DepartmentSkillBase(SkillCategoryBase):
     skill_priority: float
     skill_segment: float
     

@@ -5,14 +5,15 @@ from domain.entities.skills.department.department_skills import (
     DepartmentSkillTable,
     DepartmentSkillPatch
     )
-from src.domain.entities.skills.employee.employee_skills import (
+from domain.entities.skills.employee.employee_skills import (
     EmployeeSkillTable,
     EmployeeSkillPatch
     )
-from src.domain.entities.skills.skill.skills import (
+from domain.entities.skills.skill.skills import (
+    SkillCategoryBase,
     SkillTable,
     SkillBase)
-from src.domain.entities.types.request_types import RequestTypes
+from domain.entities.types.request_types import RequestTypes
 
 class SkillsFactory(FactoryBase):
     
@@ -21,7 +22,7 @@ class SkillsFactory(FactoryBase):
         skill_type: SkillsTypes,
         request_type: RequestTypes,
         base_content: SQLModel   
-        ):
+        ) -> SkillCategoryBase:
         if skill_type == SkillsTypes.DEPARTMENT:
             return self._get_request_type(
                 request_type=request_type,

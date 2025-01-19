@@ -1,9 +1,9 @@
 from sqlmodel import Field, SQLModel
 
-from src.domain.entities.skills.skill.skills import SkillTypeBase
+from src.domain.entities.skills.skill.skills import SkillCategoryBase
 from src.domain.entities.skills.employee.employee_domain import DomainBase
 
-class EmployeeSkillBase(DomainBase, SkillTypeBase):
+class EmployeeSkillBase(DomainBase, SkillCategoryBase):
     pass
 
 class EmployeeSkillTable(EmployeeSkillBase, table=True):

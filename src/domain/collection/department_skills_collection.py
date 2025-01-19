@@ -1,5 +1,6 @@
-from typing import Dict
+from typing import Dict, List
 from pydantic import BaseModel
+from domain.collection.collection_models import CollectionModel
 from domain.entities.business.department.department import DepartmentTable
 from domain.entities.skills.department.department_skills import DepartmentSkillTable
 from domain.entities.skills.skill.skills import SkillTable
@@ -9,11 +10,15 @@ from domain.entities.interfaces.singleton import FactorySingleton
 
 ## Objetivos: Ordenar la lista en base al peso total, peso de
 ## habilidades duras, peso de habilidades suaves y su performance de mayor a menor
+
+class DepartmentSkillModel(CollectionModel):
+    model_skill_reference: DepartmentSkillTable
+
 class DepartmentSkillsCollector(CollectorBase):
     model_reference: DepartmentSkillTable
+    model_skills: List[DepartmentSkillModel]
 
 class DepartmentSkillsCollection(CollectionBase, metaclass=FactorySingleton):
-    original_reference: DepartmentTable
     collection: list[DepartmentSkillsCollector]
     
     def __init__(
@@ -25,47 +30,24 @@ class DepartmentSkillsCollection(CollectionBase, metaclass=FactorySingleton):
             id(item.original_reference): item for item in self.collection
         } 
         
-    def sort_by_weight(self, skill_type: SkillsCategories = SkillsCategories.SOFT):
-        filtered_collection = filter(lambda x: x.skill_reference.category == skill_type, self.collection)
-        
-        self.filtered_collection = sorted(filtered_collection, key=lambda x: x.total_weight, reverse=True)
-        self.collection = filtered_collection
-    
-    def get_weight(self, skill_type = None):
-        if skill_type is SkillsCategories.HARD:
-            return self.hard_weight
-        elif skill_type is SkillsCategories.SOFT:
-            return self.soft_weight
-    
     def calculate_weight(self, skill_type):
-        filtered_collection = filter(lambda x: x.skill_reference.category == skill_type, self.collection)
-        raiting = []
-        
-        for collector in filtered_collection:
-            segment = collector.original_skill_reference.skill_segment
-            priority = collector.original_skill_reference.skill_priority
-            weight = collector.original_skill_reference.weight
-            raiting.append((segment * weight + priority * weight) / segment)
-            
-        if skill_type == SkillsCategories.HARD:
-            self.hard_weight = 1 / sum(raiting)
-        elif skill_type == SkillsCategories.SOFT:
-            self.soft_weight = 1 / sum(raiting)
+        for collector_list in self.collection:
+            filtered_collection: list[DepartmentSkillModel] = self.filter_by_weight(collector= collector_list,category=skill_type)
+            raiting = []
+
+            for collector in filtered_collection:
+                segment = collector.model_skill_reference.skill_segment
+                priority = collector.model_skill_reference.skill_priority
+                weight = collector.model_skill_reference.weight
+                raiting.append((segment * weight + priority * weight) / segment)
+
+            if skill_type == SkillsCategories.HARD:
+                collector_list.skills_raiting.hard_weight = 1 / sum(raiting)
+            elif skill_type == SkillsCategories.SOFT:
+                collector_list.skills_raiting.soft_weight = 1 / sum(raiting)
     
-    def calculate_total_weight(self, skill_type):
-        department_values = []
-        skills_values = []
-        
-        for collector in self.collection:
-            segment = collector.original_skill_reference.skill_segment
-            priority = collector.original_skill_reference.skill_priority
-            weight = collector.original_skill_reference.weight
-            department_values.append([ segment, priority])
-            skills_values.append([weight, weight * priority])
-        
-        raiting = []
-        for i in range(0, len(department_values), 1):
-            for j in range(0, len(skills_values), -1):
-                raiting.append(department_values[i][0] * skills_values[j][0] + department_values[i][1] * skills_values[j][1])
-                
-        self.total_weight = 1 / sum(raiting) 
+    def calculate_total_weight(self):
+        for collector_list in self.collection:
+            collector_list.skills_raiting.total_weight = (
+                (1 / collector_list.skills_raiting.hard_weight) + (1 / collector_list.skills_raiting.soft_weight)
+                ) / len(collector_list.model_skills)

@@ -14,7 +14,7 @@ class BusinessFactory(FactoryBase):
         request_type: RequestTypes, 
         type: BusinessComponents,
         base_content: BusinessBase
-        ):
+        ) -> BusinessBase:
         if type.DEPARTMENT == BusinessComponents.DEPARTMENT:
             return self._get_request_type(
                 request_type=request_type,

@@ -1,15 +1,22 @@
 
-from typing import Dict
+from typing import Dict, List
 
 from domain.collection.collection import CollectorBase, CollectionBase
+from domain.collection.collection_models import CollectionModel
 from domain.entities.employees.employees import EmployeeTable
 
 from domain.entities.skills.types.skills_categories import SkillsCategories 
+from domain.entities.skills.employee.employee_skills import EmployeeSkillsTable
 
 from domain.entities.interfaces.singleton import FactorySingleton
 
+
+class EmployeeSkillModel(CollectionModel):
+    model_skill_reference: EmployeeSkillsTable
+
 class EmployeeSkillsCollector(CollectorBase):
     model_reference: EmployeeTable
+    model_skills: List[EmployeeSkillModel]
     
 class EmployeeSkillsCollection(CollectionBase, metaclass=FactorySingleton):
     collection: list[EmployeeSkillsCollector]
@@ -29,12 +36,12 @@ class EmployeeSkillsCollection(CollectionBase, metaclass=FactorySingleton):
             raiting: list[int] = []
 
             employee_raiting = [[ collector.model_reference.projects_cancelled / 100, 
-                                 collector.model_reference.original_reference.projects_completed / 100 , 
-                                 collector.model_reference.original_reference.projects_rejected / 100 ],
-                                [collector.model_reference.original_reference.daily_hours, 
-                                 collector.model_reference.original_reference.performance, 
-                                 collector.model_reference.original_reference.performance * 
-                                 collector.model_reference.original_reference.time_employee_months]]
+                                 collector.model_reference.projects_completed / 100 , 
+                                 collector.model_reference.projects_rejected / 100 ],
+                                [collector.model_reference.daily_hours, 
+                                 collector.model_reference.performance, 
+                                 collector.model_reference.performance * 
+                                 collector.model_reference.time_employee_months]]
 
             skill_value = []
             for skill in filtered_collection:
