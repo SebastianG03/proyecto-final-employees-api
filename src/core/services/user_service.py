@@ -1,78 +1,70 @@
 import base64
-from datetime import datetime, timezone
-from sqlalchemy import select
-from entities.tables.employee_tables import EmployeeModel
-from entities.employee.employee import EmployeeUpdate
-from entities.auth.user import User 
-from entities.tables.business_tables import PositionModel      
-from entities.auth.auth_data import ADMIN_ROLES, ALGORITHM, SECRET_KEY
+from datetime import datetime, timedelta, timezone
+from sqlmodel import select, Session
 from core.services.logger_service import logger
-import entities.helpers.responses as resp 
+
+from domain.entities.auth.user import User
+from domain.entities.employees.employees import EmployeeTable
+from domain.entities.employees.employees_roles import EmployeeRoles
+from domain.entities.business.department.department import DepartmentTable
+from domain.entities.business.position.position import PositionTable
+
+from domain.entities.interfaces.singleton import FactorySingleton
+
+import domain.helpers.responses as resp 
 
 from core.database.database import SessionLocal
 
 
-class UserService:
+class UserService(metaclass = FactorySingleton):
     def __init__(self):
-        self.session = SessionLocal()
         self.user: User | None = None
     
-    def get_user_by_email(self, email: str) -> EmployeeModel | None:
-        result = self.session.query(EmployeeModel).where(EmployeeModel.email == email).all()
-        if len(result) == 0:
-            return None
-        return result[0]
-    
-    def get_position_by_id(self, position_id: int) -> PositionModel | None:
-        return self.session.get(PositionModel, position_id)
+    def get_user_by_email(self, email: str, session: Session) -> EmployeeTable | None:
+        result: EmployeeTable | None = session.exec(
+            select(EmployeeTable)
+            .where(EmployeeTable.email == email)
+            .limit(1)
+        ).one_or_none()
+        if result:
+            return result
+        return None
         
-    def set_user(self, user: User):
-        position: PositionModel = self.get_position_by_id(user.user_data.position_id)
-        if position is None:
-            return resp.internal_server_error_response("Position not found")
-        
-        name: str = position.name.lower()
-        
-        words_in_name = set(name.split())
-        user.is_admin = any(role in words_in_name for role in ADMIN_ROLES)
-        self.user = user
+    def set_user(self, employee: EmployeeTable):
+        connection_time = datetime.now(timezone.utc)
+        expired_time = connection_time + timedelta(minutes=30)
+        self.user = User(
+            connection_time=connection_time,
+            expire_time=expired_time,
+            is_admin= employee.leadsTeam,
+            user_data=employee
+        )
         
     def logout(self):
         self.user = None
     
     def get_user(self) -> User | None : 
-        # is_expire = self.token_is_expired()
+        actual_time = datetime.now(timezone.utc)
+        if not self.user:
+            return None
         
-        # if is_expire:
-            # self.logout()
-            # return None
-        # else:
-        return self.user
+        if self.user.expire_time > actual_time:
+            return self.user
+        else:
+            self.logout()
+            return None
             
     
-    def user_json(self) -> dict:
+    def user_json(self, session: Session) -> dict:
         if self.user is None:
             return {}
-        employee: EmployeeUpdate = self.user.user_data
-        dict_data = employee.model_dump()
-        # token = self.user.token.model_dump()
-        # dict_data['token'] = token
-        return dict_data
+        employee: EmployeeTable = self.user.user_data
+        department: DepartmentTable = session.get(DepartmentTable, employee.department_id)
+        position: PositionTable = session.get(PositionTable, employee.position_id)
+        employee_data = employee.model_dump()
+        employee_data.pop("department_id")
+        employee_data.pop("position_id")
+        employee_data["department"] = department.name
+        employee_data["position"] = position.name
+        return employee_data
     
-    # def token_is_expired(self) -> bool:
-    #     user = self.user
-    #     if user is None:
-    #         return True
-    #     token = user.token.access_token
-    #     payload = decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
-    #     exp = payload['exp']
-    #     iat = payload['iat']
-    #     create_time = datetime.fromtimestamp(iat)
-    #     expire_time = datetime.fromtimestamp(exp)
-    #     # logger.info('create_time: ' + str(create_time) + ' expire_time: ' + str(expire_time))
-    #     if create_time > expire_time:
-    #         return True
-    #     return False
-
-    
-user_service = UserService()
