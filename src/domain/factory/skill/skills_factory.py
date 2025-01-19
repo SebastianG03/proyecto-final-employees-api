@@ -1,50 +1,48 @@
-from src.domain.factory.factory import FactoryBase
-from src.domain.entities.skills.types.skills_types import SkillsTypes
-from src.domain.entities.skills.department.department_skills import (
-    DepartmentSkillBase, 
+from sqlmodel import SQLModel
+from domain.factory.factory import FactoryBase
+from domain.entities.skills.types.skills_types import SkillsTypes
+from domain.entities.skills.department.department_skills import (
     DepartmentSkillTable,
     DepartmentSkillPatch
     )
 from src.domain.entities.skills.employee.employee_skills import (
-    EmployeeSkillBase,
     EmployeeSkillTable,
     EmployeeSkillPatch
     )
 from src.domain.entities.skills.skill.skills import (
-    SkillTypeBase,
     SkillTable,
     SkillBase)
 from src.domain.entities.types.request_types import RequestTypes
 
 class SkillsFactory(FactoryBase):
     
-    
-    def __init__(self):
-        pass
-    
     def create(
         self, 
         skill_type: SkillsTypes,
-        request_type: RequestTypes
+        request_type: RequestTypes,
+        base_content: SQLModel   
         ):
         if skill_type == SkillsTypes.DEPARTMENT:
             return self._get_request_type(
                 request_type=request_type,
                 table_type=DepartmentSkillTable,
                 patch_type=DepartmentSkillPatch,
-                get_type=DepartmentSkillTable
+                get_type=DepartmentSkillTable,
+                base_content=base_content
             )
         elif skill_type == SkillsTypes.EMPLOYEE:
             return self._get_request_type(
                 request_type=request_type,
                 table_type=EmployeeSkillTable,
                 get_type=EmployeeSkillTable,
-                patch_type=EmployeeSkillPatch
+                patch_type=EmployeeSkillPatch,
+                base_content=base_content
             )
         elif skill_type == SkillsTypes.SKILLS:
             return self._get_request_type(
                 request_type=request_type,
                 table_type=SkillTable,
                 get_type=SkillTable,
-                patch_type=SkillBase
+                patch_type=SkillBase,
+                base_content=base_content
             )

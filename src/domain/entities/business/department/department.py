@@ -1,5 +1,5 @@
 from sqlmodel import Field
-from src.domain.entities.business.business import BusinessBase 
+from domain.entities.business.business import BusinessBase 
 
 
 class DepartmentBase(BusinessBase):

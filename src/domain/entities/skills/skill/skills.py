@@ -1,10 +1,10 @@
 from sqlmodel import Field, SQLModel
 
 
-class SkillTypeBase(SQLModel):
-    type: str
+class SkillCategoryBase(SQLModel):
+    category: str
 
-class SkillBase(SkillTypeBase):
+class SkillBase(SkillCategoryBase):
     name: str
     weight: float
     

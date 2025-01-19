@@ -12,13 +12,15 @@ class EmployeeBase(SQLModel):
     phone: Optional[str]
     address: str
     salary: float
-    performance: float
-    projects_completed: float
-    projects_cancelled: float
-    projects_rejected: float
-    pair_raiting: float
-    team_raiting: float
-    inmediate_boss_raiting: float
+    daily_hours: int = 8
+    time_employee_months: int = 1
+    performance: float = 0
+    projects_completed: float = 0
+    projects_cancelled: float = 0
+    projects_rejected: float = 0
+    pair_raiting: float = 0
+    team_raiting: float = 0
+    inmediate_boss_raiting: float = 0
     
     
 class EmployeeTable(EmployeeBase, table=True):

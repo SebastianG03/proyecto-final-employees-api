@@ -1,6 +1,6 @@
 from sqlmodel import Field
 
-from src.domain.entities.skills.skill.skills import SkillTypeBase
+from domain.entities.skills.skill.skills import SkillTypeBase
 
 
 class DepartmentSkillBase(SkillTypeBase):
