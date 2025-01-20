@@ -84,7 +84,33 @@ def delete_user_skills(employee_id: int, skills_ids: List[int], session: Session
 
 ### Employee weight methods
 
-def get_employee_weight(employee_id: int, session: Session) -> float:
+def get_employees_weight(session: Session) -> List[EmployeeSkillsCollector]:
+    employee_skills = session.exec(
+        select(EmployeeSkillTable)
+    ).all()
+    employee = session.exec(
+        select(EmployeeSkillTable)
+        ).all()
+    skills_ids = [skill.skill_id for skill in employee_skills]
+    skills = session.exec(
+        select(SkillTable)
+        .where(SkillTable.id in skills_ids)
+    ).all()
+    
+    employee_skill_models = [
+        EmployeeSkillModel(skill_reference=skill, model_skill_reference=employee_skill) 
+        for skill, employee_skill in zip(skills, employee_skills)
+        ]
+    
+    
+    collector = EmployeeSkillsCollector(model_reference=employee, model_skills=employee_skill_models)
+    collection = EmployeeSkillsCollection(collection=[collector])
+    collection.calculate_total_weight()
+    return collection.collection
+    
+
+
+def get_employee_total_weight(employee_id: int, session: Session) -> float:
     return _calculate_employee_weight(employee_id=employee_id, session=session)
 
 

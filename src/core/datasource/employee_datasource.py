@@ -76,7 +76,10 @@ def delete_employee(id: int, session: Session):
 def get_employees_by_weight(
     session: Session,
     employees: List[EmployeeTable] = []) -> List[EmployeeSkillsCollector]:
-    initial_collection = List[EmployeeSkillsCollector]()
+    initial_collection: List[EmployeeSkillsCollector] = []
+    
+    if len(employees) == 0:
+        employees = session.exec(select(EmployeeTable)).all()
     
     for employee in employees:
         employee_skills = session.exec(select(EmployeeSkillTable)

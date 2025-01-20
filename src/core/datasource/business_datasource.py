@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from domain.factory.business.business_factory import BusinessFactory
 from domain.entities.business.types.business_components import BusinessComponents
 from domain.entities.business.department.department import DepartmentTable, DepartmentBase
-from domain.entities.business.position.position import PositionTable, BusinessBase
+from domain.entities.business.position.position import PositionTable, PositionBase
 from domain.entities.types.request_types import RequestTypes
 
 businessFactory = BusinessFactory()
@@ -32,10 +32,10 @@ def get_departments(session: Session) -> List[DepartmentTable]:
     departments = session.exec(select(DepartmentTable)).all()
     return departments
 
-def update_department(id: int, name: str, location: str, session: Session):
+def update_department(id: int, department: DepartmentBase, session: Session):
     department_db: DepartmentTable = session.get(DepartmentTable, id)
     if department_db:
-        department_db.sqlmodel_update(DepartmentBase.model_dump(exclude_unset=True))
+        department_db.sqlmodel_update(department.model_dump(exclude_unset=True))
         
         session.add(department_db)
         session.commit()
@@ -58,7 +58,7 @@ def delete_department(id: int, session: Session):
 ##Positon
 
 def create_position(
-    position: PositionTable,
+    position: PositionBase,
     session: Session) -> dict[str, any]:
     position_db = businessFactory.create(
         type=BusinessComponents.POSITION,
@@ -75,11 +75,11 @@ def get_positions(session: Session):
     positions = session.exec(select(PositionTable)).all()
     return positions
 
-def update_position(id: int, name: str, session: Session):
+def update_position(id: int, position: PositionBase, session: Session):
     position_db = session.get(PositionTable, id)
     
     if position_db:
-        position_db.sqlmodel_update(PositionTable.model_dump(exclude_unset=True))
+        position_db.sqlmodel_update(position.model_dump(exclude_unset=True))
         
         session.commit()
         session.refresh(position_db)

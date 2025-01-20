@@ -1,32 +1,32 @@
 from typing import List
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
-from entities.business import Department
+from domain.entities.business.department.department import DepartmentBase, DepartmentTable
 from core.database.database import get_session
-from core.services.user_service import user_service
+from core.services.user_service import UserService
 import core.datasource.business_datasource as bd
-import entities.helpers.responses as resp
+import domain.helpers.responses as resp
 
 department_router = APIRouter(prefix="/business/departments", tags=["departments"])
-
+user_service = UserService()
 
 @department_router.post(
     "/create",
     status_code=status.HTTP_201_CREATED
     )
 def post_department(
-    department: Department,
+    department: DepartmentTable,
     session: Session = Depends(get_session)):
     user = user_service.get_user()
     
     
     try:
-        if not user:
-            return resp.not_logged_response
-        if not user.is_admin:
-            return resp.unauthorized_access_response
+        # if not user:
+        #     return resp.not_logged_response
+        # if not user.is_admin:
+        #     return resp.unauthorized_access_response
         return bd.create_department(department, session)
     except Exception as err:
         return resp.internal_server_error_response(err)
@@ -36,17 +36,17 @@ def post_department(
     status_code=status.HTTP_201_CREATED
     )
 def post_department(
-    departments: List[Department],
+    departments: List[DepartmentBase],
     session: Session = Depends(get_session)):
     user = user_service.get_user()
     
     try:
-        # if not user:
-        #     return resp.not_logged_response
-        # if not user.is_admin:
-        #     return resp.unauthorized_access_response
-        for d in departments:
-            bd.create_department(d, session)
+        if not user:
+            return resp.not_logged_response
+        if not user.is_admin:
+            return resp.unauthorized_access_response
+        for department in departments:
+            bd.create_department(department, session)
         return resp.created_response("Departments created successfully")
     except Exception as err:
         return resp.internal_server_error_response(err)
@@ -67,8 +67,7 @@ def get_departments(
 )
 def update_department(  
     id: int,
-    name: str,
-    location: str,
+    department: DepartmentBase,
     session: Session = Depends(get_session)
     ):
     user = user_service.get_user()
@@ -81,9 +80,8 @@ def update_department(
             return resp.unauthorized_access_response
         
         return bd.update_department(
-            id=id, 
-            name=name,
-            location=location,
+            id=id,
+            department=department,
             session=session)
         
     except Exception as err:

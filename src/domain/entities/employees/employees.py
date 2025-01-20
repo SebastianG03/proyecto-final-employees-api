@@ -2,11 +2,13 @@ from typing import Optional
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
 
+from domain.entities.employees.employees_roles import EmployeeRoles
+
 
 class EmployeeBase(SQLModel):
     name: str
     password: str
-    role: str
+    role: EmployeeRoles
     leadsTeam: bool
     email: EmailStr
     phone: Optional[str]

@@ -1,8 +1,8 @@
 from sqlmodel import Field, SQLModel
-
+from domain.entities.skills.types.skills_categories import SkillsCategories
 
 class SkillCategoryBase(SQLModel):
-    category: str
+    category: SkillsCategories
 
 class SkillBase(SkillCategoryBase):
     name: str

@@ -3,22 +3,23 @@ from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from entities.employee import HardSkills, SoftSkills
+from domain.entities.skills.skill.skills import SkillBase, SkillTable
+from domain.entities.skills.types.skills_categories import SkillsCategories
 from core.database.database import get_session
 from core.services.user_service import user_service
 import core.datasource.skills_datasource as sd
-import entities.helpers.responses as resp
-
+import domain.helpers.responses as resp
+from core.services.user_service import UserService
 
 skills_router = APIRouter(prefix="/business/skills", tags=["skills"])
+user_service = UserService()
 
-#Hard Skills
 @skills_router.post(
-    "/hard/create",
+    "/create",
     status_code=status.HTTP_201_CREATED
 )
-def create_hard_skill(
-    skill: HardSkills,
+def create_skill(
+    skill: SkillBase,
     session: Session = Depends(get_session)
 ):
     user = user_service.get_user()
@@ -28,18 +29,19 @@ def create_hard_skill(
             return resp.not_logged_response
         if not user.is_admin:
             return resp.unauthorized_access_response
-        return sd.post_hard_skills(
-            skill, session
+        return sd.post_skills(
+            skill=skill,
+            session=session
         )
     except Exception as err:
         return resp.internal_server_error_response(err)
 
 @skills_router.post(
-    "/hard/create/list",
+    "/create/list",
     status_code=status.HTTP_201_CREATED
 )
-def create_hard_skill(
-    skills: List[HardSkills],
+def create_skills(
+    skills: List[SkillBase],
     session: Session = Depends(get_session)
 ):
     user = user_service.get_user()
@@ -51,8 +53,9 @@ def create_hard_skill(
             # return resp.unauthorized_access_response
         
         for skill in skills:
-            sd.post_hard_skills(
-                skill, session
+            sd.post_skills(
+                skill, 
+                session
             )
         return resp.created_response("Hard Skills created successfully") 
     except Exception as err:
@@ -60,22 +63,34 @@ def create_hard_skill(
 
 
 @skills_router.get(
-    "/hard/all",
+    "/all",
     status_code=status.HTTP_200_OK
 )
-def get_hard_skills(session: Session = Depends(get_session)):
+def get_skills(session: Session = Depends(get_session)):
     try:
-        return sd.get_hard_skills(session)
+        return sd.get_skills(session)
     except Exception as err:
         return resp.internal_server_error_response(err)
     
+    
+@skills_router.get(
+    "/{category}/all",
+    status_code=status.HTTP_200_OK
+)
+def get_skill_by_category(category: SkillsCategories, session: Session = Depends(get_session)):
+    try:
+        return sd.get_skills_by_category(category, session)
+    except Exception as err:
+        return resp.internal_server_error_response(err)
+    
+
 @skills_router.put(
-    "/hard/update/{id}",
+    "/update/{id}",
     status_code=status.HTTP_202_ACCEPTED
 )
-def update_hard_skill(
+def update_skill(
     id: int,
-    skill: HardSkills,
+    skill: SkillBase,
     session: Session = Depends(get_session)
 ):
     user = user_service.get_user()
@@ -86,84 +101,6 @@ def update_hard_skill(
         if not user.is_admin:
             return resp.unauthorized_access_response
         
-        return sd.update_hard_skills(id, skill, session)
-    except Exception as err:
-        return resp.internal_server_error_response(err)
-
-#Soft Skills
-
-@skills_router.post(
-    "/soft/create",
-    status_code=status.HTTP_201_CREATED
-)
-def create_soft_skill(
-    skill: SoftSkills,
-    session: Session = Depends(get_session)
-):
-    user = user_service.get_user()
-    
-    try:
-        if not user:
-            return resp.not_logged_response
-        if not user.is_admin:
-            return resp.unauthorized_access_response
-        
-        return sd.post_soft_skills(
-            skill, session
-        )
-        
-    except Exception as err:
-        return resp.internal_server_error_response(err) 
-
-@skills_router.post(
-    "/soft/create/list",
-    status_code=status.HTTP_201_CREATED
-)
-def create_soft_skill(
-    skills: List[SoftSkills],
-    session: Session = Depends(get_session)
-):
-    user = user_service.get_user()
-    
-    try:
-        # if not user:
-            # return resp.not_logged_response
-        # if not user.is_admin:
-            # return resp.unauthorized_access_response
-        
-        for skill in skills:
-            sd.post_soft_skills(
-                skill, session
-            )
-        return resp.created_response("Soft Skills created successfully")
-    except Exception as err:
-        return resp.internal_server_error_response(err) 
-
-
-@skills_router.get(
-    "/soft/all",
-    status_code=status.HTTP_200_OK
-)
-def get_soft_skills(session: Session = Depends(get_session)):
-    return sd.get_soft_skills(session)
-        
-@skills_router.put(
-    "/soft/update/{id}",
-    status_code=status.HTTP_202_ACCEPTED
-)
-def update_soft_skill(
-    id: int,
-    skill: SoftSkills,
-    session: Session = Depends(get_session)
-):
-    user = user_service.get_user()
-    
-    try:
-        if not user:
-            return resp.not_logged_response
-        if not user.is_admin:
-            return resp.unauthorized_access_response
-        
-        return sd.update_soft_skills(id, skill, session)
+        return sd.update_skills(id, skill, session)
     except Exception as err:
         return resp.internal_server_error_response(err)
