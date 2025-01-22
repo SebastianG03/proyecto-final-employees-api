@@ -10,6 +10,6 @@ class SkillBase(SkillCategoryBase):
     
     
 class SkillTable(SkillBase, table=True):
-    __tablename__ = "skills"    
+    SQLModel.__tablename__ = "skills"    
     id: int = Field(default=None, primary_key=True, index=True, unique=True)
 

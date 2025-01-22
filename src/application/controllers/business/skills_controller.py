@@ -1,12 +1,10 @@
 from typing import List
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
-from domain.entities.skills.skill.skills import SkillBase, SkillTable
+from domain.entities.skills.skill.skills import SkillBase
 from domain.entities.skills.types.skills_categories import SkillsCategories
 from core.database.database import get_session
-from core.services.user_service import user_service
 import core.datasource.skills_datasource as sd
 import domain.helpers.responses as resp
 from core.services.user_service import UserService

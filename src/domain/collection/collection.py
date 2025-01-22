@@ -1,9 +1,11 @@
 from typing import Dict
 from sqlmodel import SQLModel
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 
+from domain.entities.interfaces.singleton import FactorySingleton
 from domain.entities.skills.types.skills_categories import SkillsCategories
 from domain.collection.collection_models import *
+
 
 class CollectionBase(ABC):
     collection: list[CollectorBase] = []
@@ -58,3 +60,6 @@ class CollectionBase(ABC):
     def calculate_total_weight(self):
         pass
     
+
+class CollectionSingleton(FactorySingleton, ABCMeta):
+    pass

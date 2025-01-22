@@ -1,14 +1,12 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
 from core.database.database import get_session
-from core.services.user_service import user_service
 import core.datasource.department_skills_datasource as bd
 import domain.helpers.responses as resp
 from domain.entities.skills.department.department_skills import DepartmentSkillPatch, DepartmentSkillTable
-from domain.entities.skills.types.skills_categories import SkillsCategories
 from core.services.user_service import UserService
 
 dep_skills_router = APIRouter(prefix="/business/departments/skills", tags=["department skills"])

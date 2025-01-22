@@ -1,6 +1,5 @@
 from typing import List
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
 from sqlmodel import Session
 
 from domain.entities.business.department.department import DepartmentBase, DepartmentTable

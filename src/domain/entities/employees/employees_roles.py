@@ -1,6 +1,6 @@
 from enum import Enum
 
-class EmployeeRoles(str, Enum.enum):
+class EmployeeRoles(str, Enum):
     ADMIN = "admin"
     TRAINEE = "trainee"
     TEAM_MANAGER = "team manager"

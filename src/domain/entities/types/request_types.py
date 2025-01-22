@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class RequestTypes(str, Enum.enum):
+class RequestTypes(str, Enum):
     PATCH = "patch" 
     GET = "get"
     TABLE_REQUESTS = "table requests" 

@@ -1,24 +1,23 @@
 
 from typing import Dict, List
 
-from domain.collection.collection import CollectorBase, CollectionBase
+from domain.collection.collection import CollectorBase, CollectionBase, CollectionSingleton
 from domain.collection.collection_models import CollectionModel
 from domain.entities.employees.employees import EmployeeTable
 
 from domain.entities.skills.types.skills_categories import SkillsCategories 
-from domain.entities.skills.employee.employee_skills import EmployeeSkillsTable
+from domain.entities.skills.employee.employee_skills import EmployeeSkillTable
 
-from domain.entities.interfaces.singleton import FactorySingleton
 
 
 class EmployeeSkillModel(CollectionModel):
-    model_skill_reference: EmployeeSkillsTable
+    model_skill_reference: EmployeeSkillTable
 
 class EmployeeSkillsCollector(CollectorBase):
     model_reference: EmployeeTable
     model_skills: List[EmployeeSkillModel]
     
-class EmployeeSkillsCollection(CollectionBase, metaclass=FactorySingleton):
+class EmployeeSkillsCollection(CollectionBase, metaclass=CollectionSingleton):
     collection: list[EmployeeSkillsCollector]
     
     def __init__(

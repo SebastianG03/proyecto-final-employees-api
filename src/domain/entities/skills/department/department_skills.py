@@ -1,14 +1,14 @@
-from sqlmodel import Field
+from sqlmodel import Field, SQLModel
 
-from domain.entities.skills.skill.skills import SkillCategoryBase
-
+from domain.entities.skills.skill.skills import SkillCategoryBase, SkillTable
+from domain.entities.business.department.department import DepartmentTable
 
 class DepartmentSkillBase(SkillCategoryBase):
     skill_priority: float
     skill_segment: float
     
 class DepartmentSkillTable(DepartmentSkillBase, table=True):
-    __tablename__ = "departments_skills"
+    SQLModel.__tablename__ = "departments_skills"
     id: int = Field(default=None, primary_key=True, index=True, unique=True)
     skill_id: int = Field(foreign_key="skills.id", nullable=False)
     department_id: int = Field(foreign_key="departments.id", nullable=False) 

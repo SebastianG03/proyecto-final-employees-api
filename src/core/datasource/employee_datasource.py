@@ -12,7 +12,10 @@ from domain.entities.types.request_types import RequestTypes
 from domain.entities.skills.types.skills_categories import SkillsCategories
 from domain.entities.skills.skill.skills import SkillTable
 
-from domain.collection.employee_skills_collection import EmployeeSkillsCollection, EmployeeSkillsCollector, EmployeeSkillModel
+from domain.collection.employee_skills_collection import (
+    EmployeeSkillsCollection,
+    EmployeeSkillsCollector,
+    EmployeeSkillModel)
 
 factory: EmployeesFactory = EmployeesFactory()
 

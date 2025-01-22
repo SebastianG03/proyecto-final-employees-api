@@ -1,19 +1,20 @@
 from typing import List
-from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 
 import core.datasource.employee_skills_datasource as ds
 from core.database.database import get_session
-from core.services.user_service import user_service
+from core.services.user_service import UserService
 
 import domain.helpers.responses as resp
 from domain.entities.auth.user import User
-from domain.entities.skills.employee.employee_skills import EmployeeSkillPatch, EmployeeSkillTable
+from domain.entities.skills.employee.employee_skills import EmployeeSkillPatch
 from domain.entities.skills.types.skills_categories import SkillsCategories
 
 employee_skills_router = APIRouter(prefix="/employee/skills", tags=["employee skills"])
+
+user_service = UserService()
 
 @employee_skills_router.get("/weight")
 def get_user_total_weight(session: Session = Depends(get_session)):

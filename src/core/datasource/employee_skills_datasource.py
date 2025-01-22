@@ -16,9 +16,6 @@ from domain.collection.employee_skills_collection import (
 from domain.factory.skill.skills_factory import SkillsFactory
 from domain.entities.types.request_types import RequestTypes
 
-from core.services.logger_service import logger
-from core.datasource.skills_datasource import get_hard_skills_by_ids, get_soft_skills_by_ids
-from core.datasource.department_skills_datasource import get_department_skills 
 
 
 

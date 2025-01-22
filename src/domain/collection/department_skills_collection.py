@@ -5,8 +5,7 @@ from domain.entities.business.department.department import DepartmentTable
 from domain.entities.skills.department.department_skills import DepartmentSkillTable
 from domain.entities.skills.skill.skills import SkillTable
 from domain.entities.skills.types.skills_categories import SkillsCategories
-from domain.collection.collection import CollectorBase, CollectionBase
-from domain.entities.interfaces.singleton import FactorySingleton
+from domain.collection.collection import CollectorBase, CollectionBase, CollectionSingleton
 
 ## Objetivos: Ordenar la lista en base al peso total, peso de
 ## habilidades duras, peso de habilidades suaves y su performance de mayor a menor
@@ -18,7 +17,7 @@ class DepartmentSkillsCollector(CollectorBase):
     model_reference: DepartmentSkillTable
     model_skills: List[DepartmentSkillModel]
 
-class DepartmentSkillsCollection(CollectionBase, metaclass=FactorySingleton):
+class DepartmentSkillsCollection(CollectionBase, metaclass=CollectionSingleton):
     collection: list[DepartmentSkillsCollector]
     
     def __init__(

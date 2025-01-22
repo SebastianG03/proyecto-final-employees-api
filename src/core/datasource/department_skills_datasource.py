@@ -1,16 +1,13 @@
 from typing import List
-from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 from sqlmodel import Session, select
 
-from domain.entities.business.department.department import DepartmentTable
 from domain.entities.skills.department.department_skills import (
     DepartmentSkillTable,
-    DepartmentSkillPatch,
-    DepartmentSkillBase)
+    DepartmentSkillPatch
+    )
 from domain.entities.types.request_types import RequestTypes
 from domain.entities.skills.types.skills_types import SkillsTypes
-from domain.entities.skills.types.skills_categories import SkillsCategories
 from domain.factory.skill.skills_factory import SkillsFactory
 
 import domain.helpers.responses as resp 

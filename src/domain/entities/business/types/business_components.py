@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class BusinessComponents(str, Enum.enum):
+class BusinessComponents(str, Enum):
     DEPARTMENT = "department"
     POSITION = "position"

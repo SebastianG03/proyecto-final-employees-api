@@ -1,16 +1,12 @@
-from typing import List
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
 import core.datasource.employee_datasource as ds
-from domain.entities.employees.employees import EmployeePatch, EmployeeTable
-from domain.entities.employees.employees_roles import EmployeeRoles
 from domain.entities.skills.types.skills_categories import SkillsCategories
 import domain.helpers.responses as resp
 from core.services.logger_service import logger
 
-from core.database.database import SessionLocal, get_session
+from core.database.database import get_session
 from core.services.user_service import UserService
 
 

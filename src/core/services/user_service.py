@@ -1,19 +1,14 @@
-import base64
 from datetime import datetime, timedelta, timezone
 from sqlmodel import select, Session
-from core.services.logger_service import logger
 
 from domain.entities.auth.user import User
 from domain.entities.employees.employees import EmployeeTable
-from domain.entities.employees.employees_roles import EmployeeRoles
 from domain.entities.business.department.department import DepartmentTable
 from domain.entities.business.position.position import PositionTable
 
 from domain.entities.interfaces.singleton import FactorySingleton
 
-import domain.helpers.responses as resp 
 
-from core.database.database import SessionLocal
 
 
 class UserService(metaclass = FactorySingleton):

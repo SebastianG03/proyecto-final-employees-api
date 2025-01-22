@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta, timezone
-from fastapi import APIRouter
 from fastapi import HTTPException
 from sqlmodel import Session
 
@@ -9,7 +7,7 @@ from core.services.user_service import UserService
 from domain.entities.employees.employees import  EmployeeTable
 from domain.entities.auth.user import User
 
-def authenticate_user(email: str, password: str, session: Session) -> User | None:
+def authenticate_user(email: str, password: str, session: Session) -> EmployeeTable | None:
     user_service: UserService = UserService() 
     user: EmployeeTable | None = user_service.get_user_by_email(email=email, session=session)
     if not user:
