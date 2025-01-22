@@ -7,4 +7,4 @@ class PositionBase(BusinessBase):
 
 class PositionTable(PositionBase, table=True):
     SQLModel.__tablename__ = "positions"
-    id: int =  Field(default=None, primary_key=True, index=True, unique=True)
+    id: int =  Field(default=None, primary_key=True)

@@ -4,6 +4,7 @@ from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.gzip import GZipMiddleware
 
 from core.database.database import create_tables
+from core.database.mock_data import create_data
 
 import application.controllers.employee.employee_controller as emp
 import application.controllers.employee.employee_skills_controller as emp_skill
@@ -18,12 +19,12 @@ import application.controllers.business.department_skills_controller as dep_skil
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_tables()
-    # generate_data()
+    create_data()
     yield
 
 
 def create_app() -> FastAPI:
-    application = FastAPI(lifespan=lifespan, version=2, title="Employees CRUD")
+    application = FastAPI(lifespan=lifespan, version="2.0", title="Employees CRUD")
     application.add_middleware(GZipMiddleware)
     application = _include_routers(application)
     return application

@@ -7,4 +7,4 @@ class DepartmentBase(BusinessBase):
     
 class DepartmentTable(DepartmentBase, table=True):
     SQLModel.__tablename__ = "departments"
-    id: int = Field(default=None, primary_key=True, index=True, unique=True)
+    id: int = Field(default=None, primary_key=True)

@@ -30,13 +30,11 @@ def get_employee(
 def get_managers(session: Session) -> List[EmployeeTable]:
     employees = session.exec(select(EmployeeTable)
                             .where(EmployeeTable.leadsTeam == True)
-                            .offset(0)
                             .limit(100)).all()
     return employees        
 
 def get_all_employees(session: Session) -> List[EmployeeTable]: 
     employees = session.exec(select(EmployeeTable)
-                 .offset(0)
                  .limit(100)).all()
     return employees
 

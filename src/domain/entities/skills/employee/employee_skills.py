@@ -10,7 +10,7 @@ class EmployeeSkillBase(DomainBase, SkillCategoryBase):
 
 class EmployeeSkillTable(EmployeeSkillBase, table=True):
     SQLModel.__tablename__ = "employee_skills"
-    id: int = Field(default=None, primary_key=True, index=True, unique=True)
+    id: int = Field(default=None, primary_key=True)
     employee_id: int = Field(foreign_key="employees.id", nullable=False)    
     skill_id: int = Field(foreign_key="skills.id", nullable=False)
     

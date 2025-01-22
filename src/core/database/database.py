@@ -2,7 +2,6 @@ from sqlmodel import SQLModel, Session
 from src.core.database.engine import engine
 
 def create_tables():
-    SQLModel.metadata.clear()
     SQLModel.metadata.create_all(engine)
     
 def get_session():

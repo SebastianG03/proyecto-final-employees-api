@@ -32,7 +32,7 @@ class EmployeeBase(SQLModel):
 class EmployeeTable(EmployeeBase, table=True):
     SQLModel.__tablename__ = "employees"
     SQLModel.__table_args__ = {"extend_existing": True}
-    id: int = Field(default=None, primary_key=True, index=True, unique=True)
+    id: int = Field(default=None, primary_key=True)
     department_id: int = Field(foreign_key="departments.id", nullable=False)
     position_id: int = Field(foreign_key="positions.id", nullable=False)
     

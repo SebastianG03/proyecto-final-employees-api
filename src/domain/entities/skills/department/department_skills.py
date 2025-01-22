@@ -9,7 +9,7 @@ class DepartmentSkillBase(SkillCategoryBase):
     
 class DepartmentSkillTable(DepartmentSkillBase, table=True):
     SQLModel.__tablename__ = "departments_skills"
-    id: int = Field(default=None, primary_key=True, index=True, unique=True)
+    id: int = Field(default=None, primary_key=True)
     skill_id: int = Field(foreign_key="skills.id", nullable=False)
     department_id: int = Field(foreign_key="departments.id", nullable=False) 
     
