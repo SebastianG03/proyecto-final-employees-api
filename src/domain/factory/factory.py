@@ -20,9 +20,9 @@ class FactoryBase(ABC):
         get_type: SQLModel,
         base_content: SQLModel
     ):
-        if request_type.TABLE_REQUESTS == RequestTypes.TABLE_REQUESTS:
+        if request_type == RequestTypes.TABLE_REQUESTS:
             return table_type().model_validate(base_content)
-        elif request_type.PATCH == RequestTypes.PATCH:
+        elif request_type == RequestTypes.PATCH:
             return patch_type(**base_content.model_dump(exclude_unset=True))
-        elif request_type.GET == RequestTypes.GET:
+        elif request_type == RequestTypes.GET:
             return get_type(**base_content.model_dump(exclude_unset=True))

@@ -15,7 +15,7 @@ class BusinessFactory(FactoryBase):
         type: BusinessComponents,
         base_content: BusinessBase
         ) -> BusinessBase:
-        if type.DEPARTMENT == BusinessComponents.DEPARTMENT:
+        if type == BusinessComponents.DEPARTMENT:
             return self._get_request_type(
                 request_type=request_type,
                 table_type=DepartmentTable,
@@ -23,7 +23,7 @@ class BusinessFactory(FactoryBase):
                 get_type=DepartmentTable,
                 base_content=base_content
                 ) 
-        elif type.POSITION == BusinessComponents.POSITION:
+        elif type == BusinessComponents.POSITION:
             return self._get_request_type(
                 request_type=request_type,
                 get_type=PositionTable,

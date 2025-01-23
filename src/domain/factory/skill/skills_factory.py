@@ -21,7 +21,7 @@ class SkillsFactory(FactoryBase):
         self, 
         skill_type: SkillsTypes,
         request_type: RequestTypes,
-        base_content: SQLModel   
+        base_content: SQLModel 
         ) -> SkillCategoryBase:
         if skill_type == SkillsTypes.DEPARTMENT:
             return self._get_request_type(

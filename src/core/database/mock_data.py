@@ -1,4 +1,4 @@
-from sqlmodel import Session
+from sqlmodel import SQLModel, Session
 from domain.factory.business.business_factory import BusinessFactory
 from domain.factory.employee.employees_factory import EmployeesFactory
 from domain.factory.skill.skills_factory import SkillsFactory
@@ -28,37 +28,50 @@ def create_data():
     session.close()
 
 def _create_departments(session: Session):
-    departments = { 
-        1: "Administración", 2: "Recursos Humanos", 3: "Finanzas", 4: "Ventas",
-        5: "Marketing", 6: "Logística", 7: "Producción", 8: "Atención al Cliente",
-        9: "Desarrollo de Producto", 10: "Soporte Técnico", 11: "Tecnología de la Información", 12: "Investigación y Desarrollo",
-        13: "Legal", 14: "Compras", 15: "Calidad", 16: "Operaciones",
-        17: "Estrategia", 18: "Relaciones Públicas", 19: "Gestión de Proyectos", 20: "Seguridad"
-    }
-    
-    locations = {
-        1: "Nueva York, Estados Unidos - 5th Avenue", 2: "Tokio, Japón - Shibuya Crossing", 3: "Londres, Reino Unido - Oxford Street",
-        4: "París, Francia - Avenue des Champs-Élysées", 5: "Ciudad de México, México - Paseo de la Reforma", 6: "Shanghái, China - Nanjing Road",
-        7: "Dubái, Emiratos Árabes Unidos - Sheikh Zayed Road", 8: "Sídney, Australia - George Street", 9: "Toronto, Canadá - Yonge Street",
-        10: "Berlín, Alemania - Unter den Linden", 11: "São Paulo, Brasil - Avenida Paulista", 12: "Estocolmo, Suecia - Drottninggatan",
-        13: "Moscú, Rusia - Tverskaya Street", 14: "Mumbai, India - Marine Drive", 15: "Ciudad del Cabo, Sudáfrica - Long Street",
-        16: "Buenos Aires, Argentina - Avenida 9 de Julio", 17: "Seúl, Corea del Sur - Gangnam-daero", 
-        18: "Bangkok, Tailandia - Sukhumvit Road", 19: "Ámsterdam, Países Bajos - Kalverstraat", 20: "Singapur - Orchard Road"
-        }
+    departments_list = [
+        "Administración", "Recursos Humanos", "Finanzas", "Ventas",
+        "Marketing", "Logística", "Producción", "Atención al Cliente",
+        "Desarrollo de Producto", "Soporte Técnico", "Tecnología de la Información", 
+        "Investigación y Desarrollo", "Legal", "Compras", "Calidad", "Operaciones",
+        "Estrategia", "Relaciones Públicas", "Gestión de Proyectos", "Seguridad"
+    ]
+
+    locations_list = [
+        "Nueva York, Estados Unidos - 5th Avenue",
+        "Tokio, Japón - Shibuya Crossing",
+        "Londres, Reino Unido - Oxford Street",
+        "París, Francia - Avenue des Champs-Élysées",
+        "Ciudad de México, México - Paseo de la Reforma",
+        "Shanghái, China - Nanjing Road",
+        "Dubái, Emiratos Árabes Unidos - Sheikh Zayed Road",
+        "Sídney, Australia - George Street",
+        "Toronto, Canadá - Yonge Street",
+        "Berlín, Alemania - Unter den Linden",
+        "São Paulo, Brasil - Avenida Paulista",
+        "Estocolmo, Suecia - Drottninggatan",
+        "Moscú, Rusia - Tverskaya Street",
+        "Mumbai, India - Marine Drive",
+        "Ciudad del Cabo, Sudáfrica - Long Street",
+        "Buenos Aires, Argentina - Avenida 9 de Julio",
+        "Seúl, Corea del Sur - Gangnam-daero",
+        "Bangkok, Tailandia - Sukhumvit Road",
+        "Ámsterdam, Países Bajos - Kalverstraat",
+        "Singapur - Orchard Road"
+    ]
     
     factory = BusinessFactory()
     
-    for i in range(1, len(departments) + 1):
-        department: DepartmentBase = factory.create(type=BusinessComponents.DEPARTMENT, request_type=RequestTypes.PATCH)
-        department.name = departments.get(i)
-        department.location = locations.get(randint(1, 20))
-        dep_db = factory.create(type=BusinessComponents.DEPARTMENT, request_type=RequestTypes.TABLE_REQUESTS, base_content=department)
+    for i in range(len(departments_list)):
+        dep_db = DepartmentTable(
+            name=departments_list[i],  # Asegura que el campo 'name' se asigne
+            location=f"Calle {i}, {locations_list[i]}"
+        )
         session.add(dep_db)
-        session.commit()
-        session.refresh(dep_db)
+    
+    session.commit()
 
 def _create_positions(session: Session):
-    positions = {
+    positions: dict[str] = {
         1: "Gerente General", 2: "Analista Financiero", 3: "Desarrollador de Software", 4: "Diseñador Gráfico", 
         5: "Administrador de Sistemas", 6: "Especialista en Marketing Digital", 7: "Ingeniero de Datos", 8: "Técnico de Soporte",
         9: "Científico de Datos", 10: "Gerente de Ventas", 11: "Especialista en Recursos Humanos", 12: "Contador",
@@ -72,16 +85,14 @@ def _create_positions(session: Session):
     
     factory = BusinessFactory()
     
-    for i in range(1, len(positions) + 1):
-        position: PositionBase = factory.create(type=BusinessComponents.POSITION, request_type=RequestTypes.PATCH)
-        position.name = positions.get(i)
-        position_db = factory.create(type=BusinessComponents.POSITION, request_type=RequestTypes.TABLE_REQUESTS, base_content=position)
+    for key, name in positions.items():
+        position_db: PositionTable = PositionTable(name=name)
         session.add(position_db)
         session.commit()
         session.refresh(position_db)
 
 def _create_employees(session: Session):
-    locations = {
+    locations: dict[str] = {
         1: "Nueva York, Estados Unidos - 5th Avenue", 2: "Tokio, Japón - Shibuya Crossing", 3: "Londres, Reino Unido - Oxford Street",
         4: "París, Francia - Avenue des Champs-Élysées", 5: "Ciudad de México, México - Paseo de la Reforma", 6: "Shanghái, China - Nanjing Road",
         7: "Dubái, Emiratos Árabes Unidos - Sheikh Zayed Road", 8: "Sídney, Australia - George Street", 9: "Toronto, Canadá - Yonge Street",
@@ -94,8 +105,9 @@ def _create_employees(session: Session):
               EmployeeRoles.TRAINEE, EmployeeRoles.TEAM_MANAGER ]
     factory = EmployeesFactory()
     for i in range(100):
-        employee: EmployeeBase = EmployeeBase(
-            name=f"Empleado {i}",
+
+
+        employee_db: EmployeeTable = EmployeeTable(name=f"Empleado {i}",
             email=f"empleado{i}@company.com",
             department_id=randint(1, 20),
             role=roles[randint(0, 4)],
@@ -105,10 +117,7 @@ def _create_employees(session: Session):
             address=f"Calle {i} " + locations.get(randint(1, 20)),
             daily_hours=randint(8, 12),
             phone=f"+1 123 {i+2}{i*3}{i**2} 7{i+1}9{i}",
-            password="password",
-        ) 
-
-        employee_db = factory.create(base_content=employee, requestType=RequestTypes.TABLE_REQUESTS)
+            password="password",)
         session.add(employee_db)
         session.commit()
         session.refresh(employee_db)
@@ -118,13 +127,11 @@ def _create_employees(session: Session):
 def _create_skills(session: Session):
     factory = SkillsFactory()
     for i in range(1, 100):
-        skill = SkillBase(
+        
+        skill_db = SkillTable(
             name=f"Skill {i}",
             weight=randint(0, 100),
-            category=SkillsCategories.HARD if 1 == randint(0, 1) else SkillsCategories.SOFT
-        )
-
-        skill_db = factory.create(base_content=skill, requestType=RequestTypes.TABLE_REQUESTS)
+            category=SkillsCategories.HARD if 1 == randint(0, 1) else SkillsCategories.SOFT)
         session.add(skill_db)
         session.commit()
         session.refresh(skill_db)
