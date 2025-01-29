@@ -13,7 +13,7 @@ from domain.factory.skill.skills_factory import SkillsFactory
 skills_factory = SkillsFactory()
 
 def post_skills(
-    skill: SkillTable, 
+    skill: SkillBase, 
     session: Session) -> SkillTable:
     skill_db = skills_factory.create(
         request_type=RequestTypes.TABLE_REQUESTS,

@@ -164,4 +164,3 @@ def _calculate_employee_weight(employee_id: int, session: Session):
     collection = EmployeeSkillsCollection(collection=[collector])
     collection.calculate_total_weight()
     return collection.collection[0].skills_raiting.total_weight
-    

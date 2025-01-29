@@ -9,7 +9,7 @@ class FactoryBase(ABC):
     def create(
         self, 
         requestType: RequestTypes,
-        base_content: SQLModel = SQLModel()) -> SQLModel:
+        base_content: SQLModel) -> SQLModel:
         pass
     
     def _get_request_type(
